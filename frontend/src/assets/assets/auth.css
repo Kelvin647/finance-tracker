@@ -1,0 +1,121 @@
+@import './variables.css';
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  padding: 2rem;
+  background: 
+    radial-gradient(circle at 70% 30%, rgba(0, 83, 156, 0.1) 0%, transparent 30%),
+    radial-gradient(circle at 30% 70%, rgba(80, 200, 120, 0.1) 0%, transparent 30%);
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 450px;
+  background: rgba(30, 30, 30, 0.9);
+  border-radius: 15px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.auth-form-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--gold-primary);
+  font-size: 1.8rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gold-light);
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(50, 50, 50, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  color: var(--light-text);
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3);
+}
+
+.auth-button {
+  background: var(--gold-gradient);
+  color: var(--dark-text);
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--gray-light);
+}
+
+.auth-footer a {
+  color: var(--gold-secondary);
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.auth-message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  font-weight: 500;
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.auth-message.success {
+  background: rgba(80, 200, 120, 0.2);
+  color: var(--emerald-green);
+  border: 1px solid var(--emerald-green);
+}
+
+.auth-message.error {
+  background: rgba(255, 75, 43, 0.2);
+  color: #FF4B2B;
+  border: 1px solid #FF4B2B;
+}

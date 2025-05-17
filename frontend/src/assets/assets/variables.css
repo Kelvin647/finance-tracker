@@ -1,0 +1,23 @@
+:root {
+  /* Golden Luxury Theme */
+  --gold-primary: #D4AF37;
+  --gold-secondary: #FFD700;
+  --gold-dark: #996515;
+  --gold-light: #F5E6B3;
+  
+  /* Complementary Colors */
+  --royal-blue: #00539C;
+  --emerald-green: #50C878;
+  --deep-purple: #663399;
+  
+  /* Neutrals */
+  --dark-bg: #1A1A1A;
+  --light-text: #F8F8F8;
+  --dark-text: #333333;
+  --gray-light: #E0E0E0;
+  
+  /* Gradients */
+  --gold-gradient: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+  --blue-gradient: linear-gradient(135deg, var(--royal-blue), #0066CC);
+  --green-gradient: linear-gradient(135deg, var(--emerald-green), #5CB85C);
+}
