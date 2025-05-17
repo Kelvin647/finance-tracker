@@ -1,12 +1,21 @@
 import { createContext, useState } from 'react';
 import axios from 'axios';
 
+// Create Axios instance with base config
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authMessage, setAuthMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getTimeBasedGreeting = () => {
     const hour = new Date().getHours();
@@ -15,76 +24,72 @@ export const AuthProvider = ({ children }) => {
     return 'Good evening';
   };
 
+  const clearMessages = () => {
+    setAuthMessage('');
+    setIsSuccess(false);
+  };
+
   const register = async (formData) => {
+    setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In a real app, you would use:
-      // const res = await axios.post('/api/auth/register', formData);
+      const { data } = await api.post('/auth/register', formData);
       
       setUser({
-        username: formData.username,
-        email: formData.email
+        username: data.user.username,
+        email: data.user.email
       });
       
-      setAuthMessage(`You have successfully registered. Welcome ${formData.username} to saving Jouney!`);
+      setAuthMessage(`Welcome ${data.user.username} to your saving journey!`);
       setIsSuccess(true);
       
-      // Clear message after 5 seconds
-      setTimeout(() => {
-        setAuthMessage('');
-        setIsSuccess(false);
-      }, 5000);
-      
+      setTimeout(clearMessages, 5000);
       return true;
     } catch (err) {
-      setAuthMessage(err.response?.data?.message || 'Registration failed');
+      const errorMessage = err.response?.data?.message || 
+                         err.message || 
+                         'Registration failed';
+      setAuthMessage(errorMessage);
       setIsSuccess(false);
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const login = async (formData) => {
+    setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { data } = await api.post('/auth/login', formData);
       
-      // In a real app, you would use:
-      // const res = await axios.post('/api/auth/login', formData);
-      
-      setUser({
-        username: 'DemoUser', // In real app: res.data.user.username
-        email: formData.email
-      });
-      
+      setUser(data.user);
       const greeting = getTimeBasedGreeting();
-      setAuthMessage(`${greeting}, DemoUser!`); // In real app: res.data.user.username
+      setAuthMessage(`${greeting}, ${data.user.username}!`);
       setIsSuccess(true);
       
-      // Clear message after 5 seconds
-      setTimeout(() => {
-        setAuthMessage('');
-        setIsSuccess(false);
-      }, 5000);
-      
+      setTimeout(clearMessages, 5000);
       return true;
     } catch (err) {
-      setAuthMessage(err.response?.data?.message || 'Login failed');
+      const errorMessage = err.response?.data?.message || 
+                         err.message || 
+                         'Login failed';
+      setAuthMessage(errorMessage);
       setIsSuccess(false);
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    setAuthMessage('You have been logged out');
-    setIsSuccess(true);
-    
-    setTimeout(() => {
-      setAuthMessage('');
-      setIsSuccess(false);
-    }, 3000);
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+      setUser(null);
+      setAuthMessage('You have been logged out');
+      setIsSuccess(true);
+      setTimeout(clearMessages, 3000);
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
   };
 
   return (
@@ -92,9 +97,11 @@ export const AuthProvider = ({ children }) => {
       user, 
       authMessage,
       isSuccess,
+      isLoading,
       register, 
       login, 
-      logout 
+      logout,
+      clearMessages
     }}>
       {children}
     </AuthContext.Provider>
