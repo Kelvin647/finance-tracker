@@ -24,12 +24,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "REACT_APP_API_URL=https://your-backend-url.onrender.com react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false REACT_APP_API_URL=mongodb+srv://Kelvin:<db_password>@cluster0.dete2fl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0  react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+    "deploy": "gh-pages -d build --repo https://github.com/Kelvin647/finance-tracker.git",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "serve": "serve -s build -l 3000"
   },
   "eslintConfig": {
     "extends": [
@@ -54,6 +55,7 @@
     ]
   },
   "devDependencies": {
-    "eslint-plugin-security": "^1.7.1"
+    "eslint-plugin-security": "^1.7.1",
+    "serve": "^14.2.1"
   }
 }

@@ -1,24 +1,57 @@
+// server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const authRoutes = require('./routes/auth');
-const transactionRoutes = require('./routes/transactions');
-
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://kelvin647.github.io', 'http://localhost:3000']
+}));
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/transactions', transactionRoutes);
+// MongoDB Connection
+const DB_URI = process.env.MONGODB_URI || 'mongodb+srv://Kelvin:<db_password>@cluster0.dete2fl.mongodb.net/finance-tracker?retryWrites=true&w=majority&appName=Cluster0';
 
-// Database connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(DB_URI)
+  .then(() => console.log('Connected to MongoDB Atlas'))
+  .catch(err => console.error('Connection error:', err));
 
+// Transaction Model
+const transactionSchema = new mongoose.Schema({
+  description: String,
+  amount: Number,
+  date: { type: Date, default: Date.now },
+  category: String
+});
+const Transaction = mongoose.model('Transaction', transactionSchema);
+
+// API Routes
+app.get('/api/transactions', async (req, res) => {
+  try {
+    const transactions = await Transaction.find().sort({ date: -1 });
+    res.json(transactions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.post('/api/transactions', async (req, res) => {
+  const transaction = new Transaction({
+    description: req.body.description,
+    amount: req.body.amount,
+    category: req.body.category
+  });
+
+  try {
+    const newTransaction = await transaction.save();
+    res.status(201).json(newTransaction);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
